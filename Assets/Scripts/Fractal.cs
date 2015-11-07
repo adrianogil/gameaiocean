@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Fractal : MonoBehaviour {
 
+	public Mesh[] meshes;
+
 	private Material[] materials;
 
 	public int maxDepth;
@@ -31,7 +33,7 @@ public class Fractal : MonoBehaviour {
 			InitializeMaterials();
 		}
 
-		gameObject.AddComponent<MeshFilter> ().mesh = mesh;
+		gameObject.AddComponent<MeshFilter> ().mesh = meshes.GetRandom<Mesh>();
 		gameObject.AddComponent<MeshRenderer> ().material = materials [depth];
 
 		if (depth < maxDepth) {
@@ -65,6 +67,7 @@ public class Fractal : MonoBehaviour {
 	// Update is called once per frame
 	private void Initialize(Fractal parent, Vector3 direction, Quaternion orientation) {
 		mesh = parent.mesh;
+		meshes = parent.meshes;
 		materials = parent.materials;
 		material = parent.material;
 		maxDepth = parent.maxDepth;
@@ -77,3 +80,18 @@ public class Fractal : MonoBehaviour {
 		transform.localPosition = direction * (0.5f + 0.5f * childScale);
 	}
 }
+
+public static class ArrayExtensions
+{
+	public static T GetRandom<T>(this T[] array)
+	{
+		return array[Random.Range (0, array.Length)];
+	}
+
+}
+
+
+
+
+
+
