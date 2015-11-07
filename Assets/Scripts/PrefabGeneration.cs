@@ -12,6 +12,8 @@ public class PrefabGeneration : MonoBehaviour {
 	float prefabSizeY;
 	float prefabSizeZ;
 
+	Vector3 prefabSize;
+
 	public Transform prefab;
 
 	// Use this for initialization
@@ -23,6 +25,10 @@ public class PrefabGeneration : MonoBehaviour {
 		prefabSizeY = prefabRenderer.bounds.size.y;
 		prefabSizeZ = prefabRenderer.bounds.size.z;
 
+		prefabSize.x = prefabRenderer.bounds.size.x;
+		prefabSize.y = prefabRenderer.bounds.size.y;
+		prefabSize.z = prefabRenderer.bounds.size.z;
+
 		FloorGeneration ();
 
 		TreeGeneration ();
@@ -30,23 +36,14 @@ public class PrefabGeneration : MonoBehaviour {
 
 	void FloorGeneration()
 	{
-		Vector3 cubePosition = Vector3.zero;
-		Transform cube;
 
-		for (int y = 0; y < floorSizeY; y++) {
+		Vector3 initialPosition = Vector3.zero;
 
-			cubePosition.z += prefabSizeZ;
-			cubePosition.x = 0f;
-
-			for (int x = 0; x < floorSizeX; x++) {
-
-				cubePosition.x += prefabSizeX;
-
-				cube = Instantiate (prefab, cubePosition, Quaternion.identity) as Transform;
-
-				cube.parent = transform;
-			}
-		}
+		PCGUtils.CreatePrefabMatrix (prefab,
+		                            prefabSize,
+		                            initialPosition,
+		                            Random.Range (floorSizeX, 2*floorSizeX),
+		                            Random.Range (floorSizeY, 2*floorSizeY));
 	}
 
 	void TreeGeneration()
