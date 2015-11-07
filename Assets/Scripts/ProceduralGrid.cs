@@ -11,9 +11,19 @@ public class ProceduralGrid : MonoBehaviour {
 
 	private Mesh mesh;
 
+	ImprovedPerlin perlin;
+
+	public float noiseSpeed = 0.1f;
+	public float noiseFrequency = 0.1f;
+	public float noiseAmplitude = 0.1f;
+
+	public float currentNoiseOffset = 0f;
+
 	private void Awake()
 	{
 		StartCoroutine(Generate());
+
+		perlin = new ImprovedPerlin ();
 	}
 
 	private IEnumerator Generate()
@@ -74,6 +84,8 @@ public class ProceduralGrid : MonoBehaviour {
 		}
 		mesh.tangents = tangents;
 
+		mesh.MarkDynamic ();
+
 	}
 
 	private void OnDrawGizmos()
@@ -82,6 +94,21 @@ public class ProceduralGrid : MonoBehaviour {
 		for (int i = 0; i < totalVertices; i++) {
 			Gizmos.DrawSphere(vertices[i], 0.1f);
 		}
+	}
+
+	void Update()
+	{
+		currentNoiseOffset += Time.deltaTime * noiseSpeed;
+
+		for (int i = 0, y = 0; y <= sizeY; y++)
+			for (int x = 0; x <= sizeX; x++, i++) {
+			vertices[i].z = noiseAmplitude * perlin.Noise (x * noiseFrequency, 
+			                                               y * noiseFrequency,
+			                                               currentNoiseOffset);
+			}
+
+		mesh.vertices = vertices;
+		mesh.RecalculateNormals ();
 	}
 
 }
