@@ -28,6 +28,9 @@ public class BezierSplineInspector : Editor {
 
 		EditorGUI.BeginChangeCheck ();
 		bool loop = EditorGUILayout.Toggle ("Loop", spline.Loop);
+
+		EditorGUILayout.IntField ("Selected point: ", selectedIndex);
+
 		if (EditorGUI.EndChangeCheck ()) {
 			Undo.RecordObject(spline, "Toggle Loop");
 			EditorUtility.SetDirty(spline);
