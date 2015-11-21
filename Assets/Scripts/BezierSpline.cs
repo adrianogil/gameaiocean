@@ -139,6 +139,31 @@ public class BezierSpline : MonoBehaviour {
 		return transform.TransformPoint(Bezier.GetPoint (points[i], points[i+1], points[i+2], points[i+3], t));
 	}
 
+	public Vector3 GetVelocity(float t) {
+		int i;
+
+		if (t >= 1f) {
+			t = 1f;
+			
+			i = points.Length - 4;
+		} else {
+			t = Mathf.Clamp01(t) * CurveCount;
+			
+			i = (int)t;
+			t -= i; // [0, 1]
+			
+			i *= 3;
+		}
+		
+		return transform.TransformPoint(
+			Bezier.GetFirstDerivative (points[i], points[i+1], points[i+2], points[i+3], t)
+			);
+	}
+
+	public Vector3 GetDirection(float t) {
+		return GetVelocity (t).normalized;
+	}
+
 	public void AddCurve()
 	{
 		Vector3 point = points[points.Length - 1];
