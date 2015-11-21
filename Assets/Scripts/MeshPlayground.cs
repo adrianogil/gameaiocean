@@ -8,6 +8,50 @@ public class MeshPlayground : MonoBehaviour {
 
 	public int sizeX, sizeZ;
 
+	public float animationDuration;
+
+	private Vector3[] cubeVertices;
+	private Vector3[] sphereVertices;
+	private Vector3[] vertices;
+
+	private float progress;
+
+	private Mesh mesh;
+
+	void PrepareForVerticesAnimation() {
+		mesh = GetComponent<MeshFilter> ().mesh;
+		mesh.MarkDynamic ();
+
+		cubeVertices = mesh.vertices;
+
+		float radius = 2 * meshLength;
+
+		sphereVertices = new Vector3[cubeVertices.Length];
+
+		for (int i = 0; i < cubeVertices.Length; i++) {
+			sphereVertices[i] = cubeVertices[i].normalized * radius;
+		}
+
+		vertices = mesh.vertices;
+	}
+
+	void Update() {
+		progress += Time.deltaTime / animationDuration;
+
+		if (progress >= 1f) {
+			progress -= 1f;
+		}
+
+		// Animacao de Vertices
+		for (int i = 0; i < vertices.Length; i++) {
+			vertices[i] = cubeVertices[i] + progress * (sphereVertices[i] - cubeVertices[i]);
+		}
+
+		mesh.vertices = vertices;
+		mesh.RecalculateBounds ();
+		mesh.RecalculateNormals ();
+	}
+
 	// Use this for initialization
 	void Start () {
 		GenerateCubeMesh ();
@@ -108,7 +152,9 @@ public class MeshPlayground : MonoBehaviour {
 
 		GetComponent<MeshFilter> ().mesh = meshBuilder.CreateMesh ();
 
-		Invoke ("Spherify", 3f);
+		//Invoke ("Spherify", 3f);
+
+		PrepareForVerticesAnimation ();
 	}
 
 	void Spherify() {
@@ -128,10 +174,5 @@ public class MeshPlayground : MonoBehaviour {
 		mesh.RecalculateBounds ();
 		mesh.RecalculateNormals ();
 
-	}
-
-	// Update is called once per frame
-	void Update () {
-	
 	}
 }
