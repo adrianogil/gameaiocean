@@ -17,8 +17,22 @@ public class FollowPathShip : MonoBehaviour {
 			progress -= 1f;
 		}
 
-
+		transform.Rotate (0f, 0f, 
+		                  - Angle.Short(Vector3.Angle (path.GetDirection (progress), transform.up)) * Time.deltaTime
+		);
 
 		transform.position = path.GetPoint (progress);
+	}
+}
+
+static class Angle
+{
+	public static float Short(float a)
+	{
+		if (a > 180f) {
+			return a - 360f; // [-180f, 0]
+		}
+
+		return a; // [0, 180f]
 	}
 }
