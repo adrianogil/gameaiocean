@@ -59,7 +59,8 @@ public class Maze : MonoBehaviour {
 	}
 
 	private void DoNextGenerationStep(List<MazeCell> activeCells) {
-		int currentIndex = activeCells.Count - 1;
+		//int currentIndex = activeCells.Count - 1;
+		int currentIndex = 0;
 
 		MazeCell currentCell = activeCells[currentIndex];
 
