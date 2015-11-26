@@ -34,7 +34,9 @@ public class MeshBuilder {
 
 		// Normals sao opcionais
 		if (m_Normals.Count == m_Vertices.Count) {
-			mesh.normals = m_Normals.ToArray();
+			mesh.normals = m_Normals.ToArray ();
+		} else {
+			mesh.RecalculateNormals();
 		}
 
 		// UVs sao opcionais
